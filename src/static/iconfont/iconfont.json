@@ -1,0 +1,23 @@
+{
+  "id": "3169583",
+  "name": "toutiao-m",
+  "font_family": "toutiao",
+  "css_prefix_text": "toutiao-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8156489",
+      "name": "教师",
+      "font_class": "jiaoshi",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "8156558",
+      "name": "学生",
+      "font_class": "xuesheng",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    }
+  ]
+}
