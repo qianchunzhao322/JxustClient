@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <div  :class="['fristshow', toPageValue? 'fristShowAfter': 'fristShowBefore']">
+      <!-- 这个是iframe的结构 -->
       <div v-if="selectBigShow"
            class="bigMask">
         <div class="close"
@@ -16,7 +17,9 @@
                   scrolling="auto"></iframe>
         </div>
       </div>
+      <!-- 这个是大屏结构 -->
       <div class="fristPage">
+        <!-- 大屏首部标题结构 -->
         <div class="header">
         <div class="title lefter"></div>
         <div class="title left"><img src="@/assets/headLeft.png"
@@ -35,6 +38,7 @@
         </div>
         <div class="title righter"></div>
       </div>
+      <!-- 大屏内容结构 -->
       <div class="body">
         <div class="topper">
           <div class="left">
@@ -335,6 +339,7 @@
         </div>
       </div>
       </div>
+      <!-- 这个是大屏滚动后的地图结构 -->
       <div class="bgmap"
            style="width:100%; height:100%; background-color: #081D43;">
            <div class="btn" @click="toNextPage"><i class="el-icon-back"></i>返回</div>
@@ -366,6 +371,7 @@ export default {
       active: 0,
       toPageValue: false,
 
+      // 图表实例未初始化
       myChartsFrist: null,
       myChartsSecond: null,
       myChartsThird: null,
@@ -373,52 +379,55 @@ export default {
       myChartsFifth: null,
       resize: null, // 防抖函数
 
+      // 显示隐藏控制
       selectShow: false,
       selectSchool: false,
       selectStudent: false,
       selectBigShow: false,
 
+      // 师生模块
       teacherProfessor: '',
       teacherSsociateProfessor: '',
       teacherLecturer: '',
       studentUndergrad: '',
       studentPostgraduate: '',
 
+      // 原始数据
       eFristYear: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019'],
       eFristPro: [400, 400, 300, 300, 300, 400, 400, 400, 300],
       eFristCon: [400, 500, 500, 500, 500, 400, 400, 500, 500],
       eFristSum: [400, 600, 700, 700, 1000, 400, 400, 600, 700],
-      eSecondData: [
-        { value: 176, name: '广东' },
-        { value: 143, name: '江苏' },
-        { value: 114, name: '浙江' },
-        { value: 74, name: '北京' },
-        { value: 72, name: '河南' },
-        { value: 69, name: '陕西' },
-        { value: 69, name: '上海' },
-        { value: 67, name: '山东' },
-        { value: 64, name: '湖北' },
-        { value: 57, name: '福建' },
-        { value: 46, name: '安徽' },
-        { value: 46, name: '河北' },
-        { value: 42, name: '湖南' },
-        { value: 40, name: '四川' },
-        { value: 29, name: '天津' },
-        { value: 24, name: '广西' },
-        { value: 24, name: '江西' },
-        { value: 22, name: '辽宁' },
-        { value: 18, name: '山西' },
-        { value: 15, name: '云南' },
-        { value: 14, name: '甘肃' },
-        { value: 14, name: '吉林' },
-        { value: 14, name: '重庆' },
-        { value: 12, name: '内蒙' },
-        { value: 11, name: '贵州' },
-        { value: 10, name: '黑龙江' },
-        { value: 9, name: '海南' },
-        { value: 8, name: '宁夏' },
-        { value: 3, name: '青海' }
-      ],
+      // eSecondData: [
+      //   { value: 176, name: '广东' },
+      //   { value: 143, name: '江苏' },
+      //   { value: 114, name: '浙江' },
+      //   { value: 74, name: '北京' },
+      //   { value: 72, name: '河南' },
+      //   { value: 69, name: '陕西' },
+      //   { value: 69, name: '上海' },
+      //   { value: 67, name: '山东' },
+      //   { value: 64, name: '湖北' },
+      //   { value: 57, name: '福建' },
+      //   { value: 46, name: '安徽' },
+      //   { value: 46, name: '河北' },
+      //   { value: 42, name: '湖南' },
+      //   { value: 40, name: '四川' },
+      //   { value: 29, name: '天津' },
+      //   { value: 24, name: '广西' },
+      //   { value: 24, name: '江西' },
+      //   { value: 22, name: '辽宁' },
+      //   { value: 18, name: '山西' },
+      //   { value: 15, name: '云南' },
+      //   { value: 14, name: '甘肃' },
+      //   { value: 14, name: '吉林' },
+      //   { value: 14, name: '重庆' },
+      //   { value: 12, name: '内蒙' },
+      //   { value: 11, name: '贵州' },
+      //   { value: 10, name: '黑龙江' },
+      //   { value: 9, name: '海南' },
+      //   { value: 8, name: '宁夏' },
+      //   { value: 3, name: '青海' }
+      // ],
       eThirdTo: ['升学', '就业', '其他'],
       eThirdPG: [37, 71, 4],
       eThirdStuType: ['升学', '就业', '其他'],
@@ -427,9 +436,11 @@ export default {
       eFourthData1: [23, 84],
       eFourthData2: [13, 54],
 
+      // iframe
       iframeUrl: 'https://xiaoyuan.cycnet.com.cn/s?uid=4882924&app_version=1.3.5&sid=1355875&time=1660292707&signature=xKb8LA9nmqlJRV56zE31ygzggIMR8yN7ZDNjYOMGgyPBWwreQ0&sign=59a1645643fe9ff796b25f92b4b9f7a4#',
       news: [],
 
+      // 默认值
       schoolXqValue: '校区',
       schoolImgValue: '图片类型',
       studentYearValue: '毕业年份',
@@ -438,6 +449,7 @@ export default {
       studentClassValue: '班级',
       studentImgValue: '图片类型',
 
+      // 图片控制
       default: 0,
       bigPhotoUrl: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.comshowGif.gif',
       showStyleTop: { opacity: 1 },
@@ -465,6 +477,7 @@ export default {
         title: '打卡点5'
       }],
 
+      // 级联
       schoolXqOptions: [],
       schoolImgOptions: [],
       studentYearOptions: [],
@@ -496,6 +509,7 @@ export default {
     changeMap (event) {
       console.log(event)
     },
+    // 初始化数据信息
     initItems () {
       this.getItemsCampus()
       this.getItemsCampusImgType()
@@ -503,11 +517,12 @@ export default {
       this.getItemsStudentImgType()
       this.getTeachersAndStudent()
       this.getChartFristData()
-      this.getChartSecondData()
+      // this.getChartSecondData()
       this.getChartThirdData()
       this.getChartFourthData()
       this.getNewsData()
     },
+    // 获取校区数据
     async getItemsCampus () {
       await this.$axios.get('/jlclient/getItems/getCampus').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -515,6 +530,7 @@ export default {
         }
       })
     },
+    // 获取校区图片类型
     async getItemsCampusImgType () {
       await this.$axios.get('/jlclient/getItems/getCampusImgType').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -522,6 +538,7 @@ export default {
         }
       })
     },
+    // 获取年份
     async getItemsYears () {
       await this.$axios.get('/jlclient/getItems/getYear').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -529,6 +546,7 @@ export default {
         }
       })
     },
+    // 年份联动 专业
     yearChangeToMajor (event) {
       console.log(event.target.value)
       this.$axios.get('/jlclient/getItems/getMajor', { params: { graduateYear: event.target.value } }).then((res) => {
@@ -537,6 +555,7 @@ export default {
         }
       })
     },
+    // 专业联动班级
     majorChangeToClass (event) {
       console.log(event.target.value)
       console.log(this.studentYearValue)
@@ -547,6 +566,7 @@ export default {
         }
       })
     },
+    // 获取学生照片类型
     async getItemsStudentImgType () {
       await this.$axios.get('/jlclient/getItems/getClassImgType').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -554,6 +574,7 @@ export default {
         }
       })
     },
+    // 获取师生信息
     async getTeachersAndStudent () {
       await this.$axios.get('/jlclient/teacherAndStudent').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -565,6 +586,7 @@ export default {
         }
       })
     },
+    // 获取第一个图表数据
     async getChartFristData () {
       await this.$axios.get('/jlclient/awards').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -578,6 +600,7 @@ export default {
         }
       })
     },
+    // 获取第二个图表数据
     async getChartSecondData () {
       await this.$axios.get('/jlclient/studentsFrom').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -588,6 +611,7 @@ export default {
         }
       })
     },
+    // 获取第三个图表数据
     async getChartThirdData () {
       await this.$axios.get('/jlclient/studentsTo').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -601,6 +625,7 @@ export default {
         }
       })
     },
+    // 获取第四个图表数据
     async getChartFourthData () {
       await this.$axios.get('/jlclient/sex').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -613,6 +638,7 @@ export default {
         }
       })
     },
+    // 获取资讯信息
     async getNewsData () {
       await this.$axios.get('/jlclient/news').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -622,6 +648,7 @@ export default {
         }
       })
     },
+    // 初始化图片样式
     initPhoto () {
       if (this.photoMini.length <= 4) {
         this.showStyleTop = { opacity: 0, cursor: 'default' }
@@ -634,6 +661,7 @@ export default {
         }
       }
     },
+    // 前一页功能
     preFour () {
       if (this.default === 0) {
         this.showStyleTop = { opacity: 0, cursor: 'default' }
@@ -647,6 +675,7 @@ export default {
         }
       }
     },
+    // 后一页功能
     nextFour () {
       if (this.default === Math.floor(this.photoMini.length / 4)) {
         this.showStyleBottom = { opacity: 0, cursor: 'default' }
@@ -660,6 +689,7 @@ export default {
         }
       }
     },
+    // 割取照片
     selectPhoto (n) {
       // this.photoShow.push(this.photoMini.slice((4 * n), (4 * (n + 1))))
       this.photoShow = []
@@ -667,9 +697,11 @@ export default {
         this.photoShow.push(item)
       })
     },
+    // 投影到左侧屏
     showToBig (e) {
       this.bigPhotoUrl = e.srcElement.currentSrc
     },
+    // 校友回忆和校园回忆的切换
     outerSchoolClick () {
       this.selectShow = false
       this.selectSchool = false
@@ -705,6 +737,7 @@ export default {
     closeBigMask () {
       this.selectBigShow = false
     },
+    // 检索校园忆
     async schoolSearch () {
       const formData = new FormData()
       formData.append('campus', '' + this.schoolXqValue)
@@ -715,32 +748,42 @@ export default {
         }
       }).then(res => {
         if (res.data.status === 200 && res.data.msg === '查询成功') {
+          this.$message({ type: 'success', message: '查询成功' })
+          console.log(res.data.data)
           this.photoMini = res.data.data
-        }
-        if (res.data.status === 500 && res.data.msg === '未查询到该信息') {
-          this.$message({ type: 'alert', message: '暂无相应数据' })
+          this.initPhoto()
+          this.selectPhoto(this.default)
+          this.closeShow()
+        } else {
+          this.$message({ type: 'alert', message: res.data.msg })
         }
       })
     },
-    async studentSearch () {
+    // 检索校友忆
+    studentSearch () {
       const formData = new FormData()
-      formData.append('year', '' + this.studentYearValue)
+      formData.append('year', +this.studentYearValue)
       formData.append('major', '' + this.studentZyValue)
       formData.append('class1', '' + this.studentClassValue)
       formData.append('type', '' + this.studentImgValue)
-      await this.$axios.post('/jlclient/selectSchool', formData, {
+      this.$axios.post('/jlclient/selectStudent', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
       }).then(res => {
-        if (res.data.status === 200 && res.data.msg === '查询成功') {
+        if (res.data.status === 200 && res.data.msg === '请求成功') {
+          this.$message({ type: 'success', message: '查询成功' })
           this.photoMini = res.data.data
+          this.initPhoto()
+          this.selectPhoto(this.default)
+          this.closeShow()
         }
         if (res.data.status === 500 && res.data.msg === '未查询到该信息') {
           this.$message({ type: 'alert', message: '暂无相应数据' })
         }
       })
     },
+    // 图表重置
     addResize () {
       return debounce(() => {
         this.myChartsFrist.resize()
@@ -750,6 +793,7 @@ export default {
         this.myChartsFifth.resize()
       }, 500)
     },
+    // 图表实例化初始化
     init () {
       // var that = this
       this.myChartsFrist = echarts.init(document.getElementById('echarts1'))
@@ -763,6 +807,7 @@ export default {
       this.drawFourth(this.eFourthType, this.eFourthData1, this.eFourthData2)
       this.drawFifth(this.eSecondData)
     },
+    // 图一
     drawFrist (fyear, fpro, fcon, fsum) {
       var year = fyear
       var pro = fpro
@@ -918,6 +963,7 @@ export default {
       }
       option && this.myChartsFrist.setOption(option)
     },
+    // 图二
     drawSecond (sdata) {
       var data = sdata
       if (!this.myChartsSecond) return
@@ -954,6 +1000,7 @@ export default {
       }
       option && this.myChartsSecond.setOption(option)
     },
+    // 图三
     drawThird (to, stuType, pg, ug) {
       if (!this.myChartsThird) return
       // 绘制图表
@@ -1128,6 +1175,7 @@ export default {
       }
       option && this.myChartsThird.setOption(option)
     },
+    // 图四
     drawFourth (etype, data11, data22) {
       var type = etype
       var data1 = data11
@@ -1227,7 +1275,7 @@ export default {
         ],
         series: [
           {
-            name: '男',
+            name: '女',
             type: 'pictorialBar',
             barWidth: '120%',
             stack: '数量',
@@ -1263,7 +1311,7 @@ export default {
 
             data: data1
           }, {
-            name: '女',
+            name: '男',
             type: 'pictorialBar',
             barWidth: '120%',
             stack: '数量',
@@ -1302,6 +1350,7 @@ export default {
       }
       option && this.myChartsFourth.setOption(option)
     },
+    // 图五
     drawFifth (sdata) {
       if (!this.myChartsFifth) return
       // 绘制图表
@@ -1389,39 +1438,39 @@ export default {
     height: 100%;
     width: 100%;
     transform: translate(0, -0%);
+    .bigMask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.4);
+    .close {
+      position: absolute;
+      top: 4%;
+      left: 93%;
+      height: 8%;
+      width: 4%;
+      // background-color: #fff;
+      i {
+        font-size: 0.5rem;
+        color: white;
+        cursor: pointer;
+      }
+    }
+    .ifram {
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      height: 80%;
+      width: 80%;
+      background-color: #fff;
+    }
+  }
     .fristPage{
       width: 100%;
       height: 100%;
-      .bigMask {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 99;
-      background-color: rgba(0, 0, 0, 0.4);
-      .close {
-        position: absolute;
-        top: 4%;
-        left: 93%;
-        height: 8%;
-        width: 4%;
-        // background-color: #fff;
-        i {
-          font-size: 0.5rem;
-          color: white;
-          cursor: pointer;
-        }
-      }
-      .ifram {
-        position: absolute;
-        top: 10%;
-        left: 10%;
-        height: 80%;
-        width: 80%;
-        background-color: #fff;
-      }
-    }
     .header {
       height: 9%;
       width: 100%;
@@ -1960,7 +2009,7 @@ export default {
               .echartsToText{
                 font-size: 0.09rem;
                   color: #ffeedf;
-                  text-indent: 0.19rem;
+                  // text-indent: 0.19rem;
                   line-height: 1.6;
                   text-align: left;
               }
