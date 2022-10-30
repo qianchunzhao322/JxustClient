@@ -221,7 +221,7 @@
           <div class="right">
             <div class="top">
               <div class="info">
-                <div class="title"><i class="toutiao">&#xe637;</i><i style="margin-left:10px">在职教师</i><i class="num">56</i></div>
+                <div class="title"><i class="toutiao">&#xe637;</i><i style="margin-left:10px">在职教师</i><i class="num">{{teacherSum}}</i></div>
                 <div class="main">
                   <div class="infos">
                     <i>教授</i>
@@ -251,7 +251,7 @@
                 </div>
               </div>
               <div class="info infoNext">
-                <div class="title"><i class="toutiao">&#xe63a;</i><i style="margin-left:10px">在校学生</i><i class="num">2568</i></div>
+                <div class="title"><i class="toutiao">&#xe63a;</i><i style="margin-left:10px">在校学生</i><i class="num">{{studentSum}}</i></div>
                 <div class="main">
                   <div class="infos">
                     <i>本科生</i>
@@ -370,6 +370,8 @@ export default {
     return {
       active: 0,
       toPageValue: false,
+      // 全屏与否
+      fullscreen: false,
 
       // 图表实例未初始化
       myChartsFrist: null,
@@ -386,6 +388,8 @@ export default {
       selectBigShow: false,
 
       // 师生模块
+      teacherSum: '',
+      studentSum: '',
       teacherProfessor: '',
       teacherSsociateProfessor: '',
       teacherLecturer: '',
@@ -451,29 +455,29 @@ export default {
 
       // 图片控制
       default: 0,
-      bigPhotoUrl: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.comshowGif.gif',
+      bigPhotoUrl: '127.0.0.1:8082/img/showGif.gif',
       showStyleTop: { opacity: 1 },
       showStyleBottom: { opacity: 1 },
       photoShow: [],
       photoMini: [{
         index: 1,
-        url: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.commiddlePhotoFrist.jpg',
+        url: '127.0.0.1:8082/img/middlePhotoFrist.jpg',
         title: '打卡点1'
       }, {
         index: 2,
-        url: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.commiddlePhotoSecond.jpg',
+        url: '127.0.0.1:8082/img/middlePhotoSecond.jpg',
         title: '打卡点2'
       }, {
         index: 3,
-        url: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.commiddlePhotoThird.jpg',
+        url: '127.0.0.1:8082/img/middlePhotoThird.jpg',
         title: '打卡点3'
       }, {
         index: 4,
-        url: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.commiddlePhotoFourth.jpg',
+        url: '127.0.0.1:8082/img/middlePhotoFourth.jpg',
         title: '打卡点4'
       }, {
         index: 5,
-        url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fdingyue.ws.126.net%2F2020%2F0213%2F3f115436j00q5naef000oc000gf008cm.jpg&refer=http%3A%2F%2Fdingyue.ws.126.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664240259&t=4dbc6c009414b4ae6e17518652000f51',
+        url: '127.0.0.1:8082/img/middlePhotoFifth.jpg',
         title: '打卡点5'
       }],
 
@@ -491,11 +495,15 @@ export default {
     this.init()
     this.initPhoto()
     this.initItems()
+    // this.handleFullScreen()
     window.addEventListener('resize', this.resize)
   },
   created () {
     this.resize = this.addResize()
     this.selectPhoto(this.default)
+    // setInterval(() => {
+    //   this.handleFullScreen()
+    // }, 1000)
   },
   beforeDestoryed () {
     // 组件销毁前移除监听,释放echarts实例,防止内存泄露
@@ -517,7 +525,7 @@ export default {
       this.getItemsStudentImgType()
       this.getTeachersAndStudent()
       this.getChartFristData()
-      // this.getChartSecondData()
+      this.getChartSecondData()
       this.getChartThirdData()
       this.getChartFourthData()
       this.getNewsData()
@@ -583,6 +591,8 @@ export default {
           this.teacherLecturer = res.data.data.teacher.lecturer
           this.studentUndergrad = res.data.data.student.undergrad
           this.studentPostgraduate = res.data.data.student.postgraduate
+          this.teacherSum = res.data.data.teacher.num
+          this.studentSum = res.data.data.student.num
         }
       })
     },
@@ -600,7 +610,7 @@ export default {
         }
       })
     },
-    // 获取第二个图表数据
+    // 获取第二个图表数据(生源地图)
     async getChartSecondData () {
       await this.$axios.get('/jlclient/studentsFrom').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
@@ -630,8 +640,8 @@ export default {
       await this.$axios.get('/jlclient/sex').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
           this.eFourthType = res.data.data.major
-          this.eFourthData1 = res.data.data.major1
-          this.eFourthData2 = res.data.data.major2
+          this.eFourthData1 = res.data.data.woman
+          this.eFourthData2 = res.data.data.man
           this.drawFourth(this.eFourthType, this.eFourthData1, this.eFourthData2)
         } else {
           this.$message({ type: 'danger', message: '图表数据获取失败，请刷新' })
@@ -807,6 +817,33 @@ export default {
       this.drawFourth(this.eFourthType, this.eFourthData1, this.eFourthData2)
       this.drawFifth(this.eSecondData)
     },
+    // 项目全屏展示（未使用）
+    handleFullScreen () {
+      const element = document.documentElement
+      if (this.fullscreen) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen()
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        }
+      } else {
+        if (element.requestFullscreen) {
+          element.requestFullscreen()
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen()
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen()
+        } else if (element.msRequestFullscreen) {
+          // IE11
+          element.msRequestFullscreen()
+        }
+      }
+      this.fullscreen = !this.fullscreen
+    },
     // 图一
     drawFrist (fyear, fpro, fcon, fsum) {
       var year = fyear
@@ -963,7 +1000,7 @@ export default {
       }
       option && this.myChartsFrist.setOption(option)
     },
-    // 图二
+    // 图二（未使用）
     drawSecond (sdata) {
       var data = sdata
       if (!this.myChartsSecond) return
@@ -1065,8 +1102,8 @@ export default {
             type: 'value',
             name: '',
             min: 0,
-            max: 100,
-            interval: 20,
+            // max: 200,
+            // interval: 20,
             axisLabel: {
               formatter: '{value} ',
               textStyle: {
@@ -1088,8 +1125,8 @@ export default {
             type: 'value',
             name: '',
             min: 0,
-            max: 100,
-            interval: 20,
+            // max: 100,
+            // interval: 20,
             axisLabel: {
               formatter: '{value}',
               textStyle: {
@@ -1111,7 +1148,7 @@ export default {
         series: [
           {
             name: '本科生',
-            data: firstIndustry,
+            data: thirdIndustry,
             type: 'line',
             smooth: true, // true曲线; false折线
             itemStyle: {
@@ -1142,7 +1179,7 @@ export default {
           },
           {
             name: '研究生',
-            data: thirdIndustry,
+            data: firstIndustry,
             type: 'line',
             smooth: true, // true曲线; false折线
             itemStyle: {
@@ -1354,9 +1391,8 @@ export default {
     drawFifth (sdata) {
       if (!this.myChartsFifth) return
       // 绘制图表
-      this.$axios.defaults.baseURL = 'https://geo.datav.aliyun.com/areas_v3/bound'
       this.myChartsFifth.showLoading()
-      this.$axios.get('/100000_full.json').then((geoJson) => {
+      this.$axios.get('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json').then((geoJson) => {
         this.myChartsFifth.hideLoading()
         echarts.registerMap('china', geoJson.data)
         const option = {
@@ -1376,7 +1412,7 @@ export default {
           },
           visualMap: {
             min: 1,
-            max: 4000,
+            max: 1000,
             text: ['High', 'Low'],
             realtime: false,
             textStyle: {
@@ -1407,7 +1443,6 @@ export default {
         option && this.myChartsFifth.setOption(option)
       }
       )
-      this.$axios.defaults.baseURL = 'http://39.108.181.54:8080'
     },
     toNextPage () {
       this.toPageValue = !this.toPageValue
