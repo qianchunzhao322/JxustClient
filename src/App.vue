@@ -496,6 +496,7 @@ export default {
     this.initPhoto()
     this.initItems()
     // this.handleFullScreen()
+    this.testJson = require('./utils/china.json')
     window.addEventListener('resize', this.resize)
   },
   created () {
@@ -1394,7 +1395,9 @@ export default {
       this.myChartsFifth.showLoading()
       this.$axios.get('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json').then((geoJson) => {
         this.myChartsFifth.hideLoading()
-        echarts.registerMap('china', geoJson.data)
+        echarts.registerMap('china', this.testJson)
+        // console.log('geoJson.data', geoJson.data) 网络数据
+        // console.log('test', this.testJson)  静态数据
         const option = {
           title: {
             text: '2020年江西理工大学生源分布（全国）',
