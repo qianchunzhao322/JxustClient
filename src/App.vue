@@ -365,6 +365,7 @@
 import '@/utils/flexible.js'
 import * as echarts from 'echarts'
 import { debounce } from 'lodash'
+import importJson from './utils/china.json'
 export default {
   data () {
     return {
@@ -455,29 +456,29 @@ export default {
 
       // 图片控制
       default: 0,
-      bigPhotoUrl: '127.0.0.1:8082/img/showGif.gif',
+      bigPhotoUrl: 'http://10.21.63.25:18082/img/showGif.gif',
       showStyleTop: { opacity: 1 },
       showStyleBottom: { opacity: 1 },
       photoShow: [],
       photoMini: [{
         index: 1,
-        url: '127.0.0.1:8082/img/middlePhotoFrist.jpg',
+        url: 'http://10.21.63.25:18082/img/middlePhotoFrist.jpg',
         title: '打卡点1'
       }, {
         index: 2,
-        url: '127.0.0.1:8082/img/middlePhotoSecond.jpg',
+        url: 'http://10.21.63.25:18082/img/middlePhotoSecond.jpg',
         title: '打卡点2'
       }, {
         index: 3,
-        url: '127.0.0.1:8082/img/middlePhotoThird.jpg',
+        url: 'http://10.21.63.25:18082/img/middlePhotoThird.jpg',
         title: '打卡点3'
       }, {
         index: 4,
-        url: '127.0.0.1:8082/img/middlePhotoFourth.jpg',
+        url: 'http://10.21.63.25:18082/img/middlePhotoFourth.jpg',
         title: '打卡点4'
       }, {
         index: 5,
-        url: '127.0.0.1:8082/img/middlePhotoFifth.jpg',
+        url: 'http://10.21.63.25:18082/img/middlePhotoFifth.jpg',
         title: '打卡点5'
       }],
 
@@ -1393,59 +1394,55 @@ export default {
       if (!this.myChartsFifth) return
       // 绘制图表
       this.myChartsFifth.showLoading()
-      this.$axios.get('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json').then((geoJson) => {
-        this.myChartsFifth.hideLoading()
-        echarts.registerMap('china', this.testJson)
-        // console.log('geoJson.data', geoJson.data) 网络数据
-        // console.log('test', this.testJson)  静态数据
-        const option = {
-          title: {
-            text: '2020年江西理工大学生源分布（全国）',
-            left: '16%',
-            top: '3%',
-            textStyle: {
-              color: '#11DFF2',
-              fontFamily: 'Microsoft YaHei',
-              fontSize: '0.225rem'
-            }
+      this.myChartsFifth.hideLoading()
+      echarts.registerMap('china', importJson)
+      console.log('test', this.testJson) // 静态数据
+      const option = {
+        title: {
+          text: '2020年江西理工大学生源分布（全国）',
+          left: '16%',
+          top: '3%',
+          textStyle: {
+            color: '#11DFF2',
+            fontFamily: 'Microsoft YaHei',
+            fontSize: '0.225rem'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{b}<br/>{c} (人)'
+        },
+        visualMap: {
+          min: 1,
+          max: 1000,
+          text: ['High', 'Low'],
+          realtime: false,
+          textStyle: {
+            color: '#11DFF2',
+            fontFamily: 'Microsoft YaHei',
+            fontSize: '0.065rem'
           },
-          tooltip: {
-            trigger: 'item',
-            formatter: '{b}<br/>{c} (人)'
-          },
-          visualMap: {
-            min: 1,
-            max: 1000,
-            text: ['High', 'Low'],
-            realtime: false,
-            textStyle: {
-              color: '#11DFF2',
-              fontFamily: 'Microsoft YaHei',
-              fontSize: '0.065rem'
+          calculable: true,
+          inRange: {
+            color: ['lightskyblue', 'yellow', 'orangered']
+          }
+        },
+        series: [
+          {
+            name: '该年生源分布',
+            type: 'map',
+            map: 'china',
+            layoutCenter: ['50%', '65%'],
+            layoutSize: '130%',
+            label: {
+              show: true
             },
-            calculable: true,
-            inRange: {
-              color: ['lightskyblue', 'yellow', 'orangered']
-            }
-          },
-          series: [
-            {
-              name: '该年生源分布',
-              type: 'map',
-              map: 'china',
-              layoutCenter: ['50%', '65%'],
-              layoutSize: '130%',
-              label: {
-                show: true
-              },
-              data: sdata
-            }
-          ]
-        }
-
-        option && this.myChartsFifth.setOption(option)
+            data: sdata
+          }
+        ]
       }
-      )
+
+      option && this.myChartsFifth.setOption(option)
     },
     toNextPage () {
       this.toPageValue = !this.toPageValue
