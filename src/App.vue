@@ -43,24 +43,16 @@
         <div class="topper">
           <div class="left">
             <div class="inner">
-              <!-- <div class="rot">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div> -->
               <div class="show">
                 <div v-if="selectShow"
-                     class="mask">
+                    class="mask">
                   <div v-if="selectSchool"
-                       class="box school">
+                      class="box school">
                     <div class="innerbox">
                       <div class="title">
                         <div class="leftTxt">校院忆</div>
                         <div class="rightTxt"
-                             @click="toStudent">校友忆</div>
+                          @click="toStudent">校友忆</div>
                       </div>
                       <div class="input">
                         <select v-model="schoolXqValue"
@@ -93,17 +85,18 @@
                         </select>
                       </div>
                       <div class="btn"
-                           @click="schoolSearch">搜索</div>
+                          @click="schoolSearch">搜索</div>
                       <div class="btn close"
-                           @click="closeShow">关闭</div>
+                          @click="closeShow">关闭</div>
                     </div>
                   </div>
                   <div v-if="selectStudent"
-                       class="box student">
+                      class="box student">
+                      <div class="yjs" @click="toYjs">研究生</div>
                     <div class="innerbox">
                       <div class="title">
                         <div class="rightTxt"
-                             @click="toSchool">校院忆</div>
+                            @click="toSchool">校院忆</div>
                         <div class="leftTxt">校友忆</div>
                       </div>
                       <div class="input">
@@ -122,18 +115,6 @@
                           </option>
                         </select>
                       </div>
-                      <!-- <div class="input">
-                      <select v-model="studentTypeValue" style="height:100%;weight:100%"
-                               clearable
-                               placeholder="学生类型">
-                      <option value="学生类型" disabled selected>学生类型</option>
-                      <option v-for="item in studentTypeOptions"
-                                 :key="item.value"
-                                 :label="item.label"
-                                 :value="item.value">
-                      </option>
-                    </select>
-                    </div> -->
                       <div class="input">
                         <select v-model="studentZyValue"
                                 style="height:100%;weight:100%"
@@ -186,17 +167,47 @@
                            @click="closeShow">关闭</div>
                     </div>
                   </div>
+                  <div v-if="selectYjs"
+                      class="box student">
+                      <div class="yjs" @click="toStudent">校友忆</div>
+                    <div class="innerbox">
+                      <div class="title">
+                        <div class="rightTxt"
+                            @click="toSchool">校院忆</div>
+                        <div class="leftTxt">研究生</div>
+                      </div>
+                      <div class="input">
+                        <select v-model="yjsYearValue"
+                                style="height:100%;weight:100%"
+                                clearable
+                                placeholder="毕业年份">
+                          <option value="毕业年份"
+                                  disabled
+                                  selected>毕业年份</option>
+                          <option v-for="item in yjsYearOptions"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                          </option>
+                        </select>
+                      </div>
+                      <div class="btn"
+                           @click="yjsSearch">搜索</div>
+                      <div class="btn close"
+                           @click="closeShow">关闭</div>
+                    </div>
+                  </div>
                 </div>
                 <img :src="bigPhotoUrl"
-                     style="width: 100%; height:100%"
-                     alt="">
+                    style="width: 100%; height:100%"
+                    alt="">
               </div>
             </div>
             <div class="txt"
-                 @click="outerStudentClick">校友忆<i class="el-icon-search"></i></div>
+                @click="outerStudentClick">校友忆<i class="el-icon-search"></i></div>
             <div class="txt"
-                 id="bottom"
-                 @click="outerSchoolClick">校院忆</div>
+                id="bottom"
+                @click="outerSchoolClick">校院忆</div>
           </div>
           <div class="middle">
             <div class="innerbox">
@@ -299,7 +310,7 @@
               </div>
               <div class="all righter">
                 <div class="title">
-                  <div class="txt">毕业去向</div>
+                  <div class="txt">生源信息</div>
                   <div class="txt littleClick" @click="toNextPage">查看生源详情</div>
                 </div>
                 <div class="echarts"
@@ -387,6 +398,7 @@ export default {
       selectSchool: false,
       selectStudent: false,
       selectBigShow: false,
+      selectYjs: false,
 
       // 师生模块
       teacherSum: '',
@@ -402,37 +414,6 @@ export default {
       eFristPro: [400, 400, 300, 300, 300, 400, 400, 400, 300],
       eFristCon: [400, 500, 500, 500, 500, 400, 400, 500, 500],
       eFristSum: [400, 600, 700, 700, 1000, 400, 400, 600, 700],
-      // eSecondData: [
-      //   { value: 176, name: '广东' },
-      //   { value: 143, name: '江苏' },
-      //   { value: 114, name: '浙江' },
-      //   { value: 74, name: '北京' },
-      //   { value: 72, name: '河南' },
-      //   { value: 69, name: '陕西' },
-      //   { value: 69, name: '上海' },
-      //   { value: 67, name: '山东' },
-      //   { value: 64, name: '湖北' },
-      //   { value: 57, name: '福建' },
-      //   { value: 46, name: '安徽' },
-      //   { value: 46, name: '河北' },
-      //   { value: 42, name: '湖南' },
-      //   { value: 40, name: '四川' },
-      //   { value: 29, name: '天津' },
-      //   { value: 24, name: '广西' },
-      //   { value: 24, name: '江西' },
-      //   { value: 22, name: '辽宁' },
-      //   { value: 18, name: '山西' },
-      //   { value: 15, name: '云南' },
-      //   { value: 14, name: '甘肃' },
-      //   { value: 14, name: '吉林' },
-      //   { value: 14, name: '重庆' },
-      //   { value: 12, name: '内蒙' },
-      //   { value: 11, name: '贵州' },
-      //   { value: 10, name: '黑龙江' },
-      //   { value: 9, name: '海南' },
-      //   { value: 8, name: '宁夏' },
-      //   { value: 3, name: '青海' }
-      // ],
       eThirdTo: ['升学', '就业', '其他'],
       eThirdPG: [37, 71, 4],
       eThirdStuType: ['升学', '就业', '其他'],
@@ -453,6 +434,7 @@ export default {
       studentZyValue: '专业',
       studentClassValue: '班级',
       studentImgValue: '图片类型',
+      yjsYearValue: '毕业年份',
 
       // 图片控制
       default: 0,
@@ -463,23 +445,23 @@ export default {
       photoMini: [{
         index: 1,
         url: 'http://10.21.63.25:18082/img/middlePhotoFrist.jpg',
-        title: '打卡点1'
+        title: '三江校徽'
       }, {
         index: 2,
         url: 'http://10.21.63.25:18082/img/middlePhotoSecond.jpg',
-        title: '打卡点2'
+        title: '三江图书馆'
       }, {
         index: 3,
         url: 'http://10.21.63.25:18082/img/middlePhotoThird.jpg',
-        title: '打卡点3'
+        title: '三江会议中心'
       }, {
         index: 4,
         url: 'http://10.21.63.25:18082/img/middlePhotoFourth.jpg',
-        title: '打卡点4'
+        title: '红旗信院楼'
       }, {
         index: 5,
         url: 'http://10.21.63.25:18082/img/middlePhotoFifth.jpg',
-        title: '打卡点5'
+        title: '红旗正门'
       }],
 
       // 级联
@@ -489,6 +471,7 @@ export default {
       studentTypeOptions: [],
       studentZyOptions: [],
       studentClassOptions: [],
+      yjsYearOptions: [],
       studentImgOptions: []
     }
   },
@@ -524,6 +507,7 @@ export default {
       this.getItemsCampus()
       this.getItemsCampusImgType()
       this.getItemsYears()
+      this.getItemsYjsYears()
       this.getItemsStudentImgType()
       this.getTeachersAndStudent()
       this.getChartFristData()
@@ -553,6 +537,14 @@ export default {
       await this.$axios.get('/jlclient/getItems/getYear').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
           this.studentYearOptions = res.data.data.year
+        }
+      })
+    },
+    // 获取研究生年份
+    async getItemsYjsYears () {
+      await this.$axios.get('/jlclient/getItems/getPostGraYear').then((res) => {
+        if (res.data.status === 200 && res.data.msg === '请求成功') {
+          this.yjsYearOptions = res.data.data.year
         }
       })
     },
@@ -617,7 +609,7 @@ export default {
       await this.$axios.get('/jlclient/studentsFrom').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
           this.eSecondData = res.data.data
-          this.drawFifth(this.eSecondData)
+          this.drawFifth(this.eSecondData, res.data.year)
         } else {
           this.$message({ type: 'danger', message: '图表数据获取失败，请刷新' })
         }
@@ -625,12 +617,13 @@ export default {
     },
     // 获取第三个图表数据
     async getChartThirdData () {
-      await this.$axios.get('/jlclient/studentsTo').then((res) => {
+      await this.$axios.get('/jlclient/allStudentsFrom').then((res) => {
+        console.log(res.data.status)
         if (res.data.status === 200 && res.data.msg === '请求成功') {
-          this.eThirdTo = res.data.data.toType
-          this.eThirdStuType = res.data.data.stuType
-          this.eThirdPG = res.data.data.postGrad
-          this.eThirdUG = res.data.data.underGrad
+          this.eThirdTo = res.data.data.data.toType
+          this.eThirdStuType = res.data.data.data.stuType
+          this.eThirdPG = res.data.data.data.postGrad
+          this.eThirdUG = res.data.data.data.underGrad
           this.drawThird(this.eThirdTo, this.eThirdStuType, this.eThirdPG, this.eThirdUG)
         } else {
           this.$message({ type: 'danger', message: '图表数据获取失败，请刷新' })
@@ -718,6 +711,7 @@ export default {
       this.selectShow = false
       this.selectSchool = false
       this.selectStudent = false
+      this.selectYjs = false
       this.selectShow = true
       this.selectSchool = true
     },
@@ -725,6 +719,7 @@ export default {
       this.selectShow = false
       this.selectSchool = false
       this.selectStudent = false
+      this.selectYjs = false
       this.selectShow = true
       this.selectStudent = true
     },
@@ -732,13 +727,22 @@ export default {
       this.selectShow = false
       this.selectSchool = false
       this.selectStudent = false
+      this.selectYjs = false
     },
     toStudent () {
       this.selectSchool = false
+      this.selectYjs = false
       this.selectStudent = true
+    },
+    toYjs () {
+      console.log('1111')
+      this.selectSchool = false
+      this.selectStudent = false
+      this.selectYjs = true
     },
     toSchool () {
       this.selectStudent = false
+      this.selectYjs = false
       this.selectSchool = true
     },
     open (event) {
@@ -754,6 +758,7 @@ export default {
       const formData = new FormData()
       formData.append('campus', '' + this.schoolXqValue)
       formData.append('type', '' + this.schoolImgValue)
+      console.log(formData)
       await this.$axios.post('/jlclient/selectSchool', formData, {
         headers: {
           'Content-Type': 'application/json'
@@ -766,6 +771,9 @@ export default {
           this.initPhoto()
           this.selectPhoto(this.default)
           this.closeShow()
+        } else if (res.data.status === 500 && res.data.msg === '未查询到该信息') {
+          this.$message({ type: 'alert', message: '暂无相应数据' })
+          this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
         } else {
           this.$message({ type: 'alert', message: res.data.msg })
         }
@@ -790,8 +798,25 @@ export default {
           this.selectPhoto(this.default)
           this.closeShow()
         }
-        if (res.data.status === 500 && res.data.msg === '未查询到该信息') {
+        if (res.data.status === 500 && res.data.msg === '未查询到信息') {
           this.$message({ type: 'alert', message: '暂无相应数据' })
+          this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
+        }
+      })
+    },
+    // 检索研究生
+    yjsSearch () {
+      this.$axios.get('/jlclient/getItems/getPostGraInfoByYear', { params: { graduateYear: this.yjsYearValue } }).then((res) => {
+        if (res.data.status === 200) {
+          this.$message({ type: 'success', message: '研究生照片信息获取成功' })
+          this.photoMini = res.data.data.data
+          this.initPhoto()
+          this.selectPhoto(this.default)
+          this.closeShow()
+        }
+        if (res.data.status === 500 && res.data.msg === '未查询到信息') {
+          this.$message({ type: 'alert', message: '暂无相应数据' })
+          this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
         }
       })
     },
@@ -1390,7 +1415,7 @@ export default {
       option && this.myChartsFourth.setOption(option)
     },
     // 图五
-    drawFifth (sdata) {
+    drawFifth (sdata, year) {
       if (!this.myChartsFifth) return
       // 绘制图表
       this.myChartsFifth.showLoading()
@@ -1399,7 +1424,7 @@ export default {
       console.log('test', this.testJson) // 静态数据
       const option = {
         title: {
-          text: '2020年江西理工大学生源分布（全国）',
+          text: year + '级江西理工大学生源分布（全国）',
           left: '16%',
           top: '3%',
           textStyle: {
@@ -1642,6 +1667,21 @@ export default {
                   width: 36%;
                   background: url("./assets/search_schools.png") no-repeat;
                   background-size: 100% 100%;
+                  .yjs{
+                    position: absolute;
+                    top: 15%;
+                    right: -5%;
+                    height: 20%;
+                    width: 9%;
+                    padding-top: 6%;
+                    background-color: rgba(0,0,0,0);
+                    background: url("./assets/border_size_right.png") no-repeat;
+                    background-size: 100% 100%;
+                    line-height: 1;
+                    color: #11dff2;
+                    font-size: 0.106rem;
+                    cursor: pointer;
+                  }
                   .innerbox {
                     position: absolute;
                     top: 6%;
