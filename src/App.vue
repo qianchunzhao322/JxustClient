@@ -1,7 +1,7 @@
 <template>
   <div class="app">
-    <div  :class="['fristshow', toPageValue? 'fristShowAfter': 'fristShowBefore']">
-      <!-- 这个是iframe的结构 -->
+    <div id="toplevel" :class="['fristshow']">
+      <!-- 这个是新闻资讯iframe的结构 -->
       <div v-if="selectBigShow"
            class="bigMask">
         <div class="close"
@@ -17,7 +17,7 @@
                   scrolling="auto"></iframe>
         </div>
       </div>
-      <!-- 这个是大屏结构 -->
+      <!-- 这个是第一屏结构 -->
       <div class="fristPage">
         <!-- 大屏首部标题结构 -->
         <div class="header">
@@ -232,7 +232,12 @@
           <div class="right">
             <div class="top">
               <div class="info">
-                <div class="title"><i class="toutiao">&#xe637;</i><i style="margin-left:10px">在职教师</i><i class="num">{{teacherSum}}</i></div>
+                <div class="title">
+                  <i class="toutiao">&#xe637;</i>
+                  <i style="margin-left:10px">在职教师</i>
+                  <i class="num">{{teacherSum}}</i>
+                  <!-- <i style="margin-left:66px;cursor: pointer;" @click="toNextPage(2)">教师历史风采 >>></i> -->
+                </div>
                 <div class="main">
                   <div class="infos">
                     <i>教授</i>
@@ -311,7 +316,7 @@
               <div class="all righter">
                 <div class="title">
                   <div class="txt">生源信息</div>
-                  <div class="txt littleClick" @click="toNextPage">查看生源详情</div>
+                  <!-- <div class="txt littleClick" @click="toNextPage(1)">查看生源详情 >>></div> -->
                 </div>
                 <div class="echarts"
                      id="echarts3"></div>
@@ -328,13 +333,13 @@
                 <div class="echarts"
                      id="echarts4"></div>
               </div>
-              <div class="all righter">
+              <div v-if="vision3" class="all righter">
                 <div class="title"
                      style="background-size: 96% 30%;">
                   <div class="txt"
-                       style="left: 10%">最新动态</div>
+                       style="left: 10%;cursor: pointer;" @click="newsTurn">返回</div>
                 </div>
-                <div class="main">
+                <div  class="main">
                   <div class="new"
                        v-for="item in news"
                        :key="item.index">
@@ -345,33 +350,70 @@
                   </div>
                 </div>
               </div>
+              <div v-if="!vision3" class="all righter">
+                <div class="title"
+                     style="background-size: 96% 30%;">
+                  <div class="txt"
+                       style="left: 10%">更多功能</div>
+                </div>
+                <div  class="main">
+                  <div class="gn-card" @click="toNextPage(1)">
+                    <img src="./assets/card-student.png" alt="">
+                    <div class="name">生源详情入口 >>></div>
+                  </div>
+                  <div class="gn-card" @click="newsTurn">
+                    <img src="./assets/card-new.png" alt="">
+                    <div class="name">学院新闻入口 >>></div>
+                  </div>
+                  <div class="gn-card" @click="toNextPage(2)">
+                    <img src="./assets/card-teacher.png" alt="">
+                    <div class="name">教师风采入口 >>></div>
+                  </div>
+                  <div class="gn-card" @click="info">
+                    <img src="./assets/card-cj.png" alt="">
+                    <div class="name">学院成就（待开放）</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       </div>
-      <!-- 这个是大屏滚动后的地图结构 -->
+      <!-- 这个是第二屏的地图结构 -->
       <div class="bgmap"
-           style="width:100%; height:100%; background-color: #081D43;">
-           <div class="btn" @click="toNextPage"><i class="el-icon-back"></i>返回</div>
-        <!-- <div class="step">
-          <el-steps direction="vertical"
-                    process-status="finish"
-                    finish-status="wait"
-                    @click="changeMap($event)"
-                    :active="active">
-            <el-step title="2019" style="cursor: pointer;"></el-step>
-            <el-step title="2020"></el-step>
-            <el-step title="2021"></el-step>
-            <el-step title="2022"></el-step>
-          </el-steps>
-        </div> -->
-        <div class="map"
-             id="echarts5"></div>
+          style="width:100%; height:100%; background-color: #081D43;">
+          <div class="btn" @click="toNextPage(1)"><i class="el-icon-back"></i>返回</div>
+        <div class="map" id="echarts5"></div>
+      </div>
+      <!-- 这是第三屏教师历史风采 -->
+      <div class="bgteacher">
+          <div v-if="!dialogVisible" class="d">
+            <div class="btn" @click="toNextPage(2)"><i class="el-icon-back"></i>返回</div>
+            <div class="title">学院教师历史风采榜</div>
+            <div style="margin-top: 100px;" class="map">
+              <el-cascader v-model="teacherValue" :options="teacherOptions"></el-cascader>
+              <el-button icon="el-icon-search" @click="findTeacher" circle></el-button>
+            </div>
+            <div v-if="isTeacherShow" class="wall">
+              <div v-for="item in teacherShow" :key="item.id" class="wall-card" :data-url="item.url" @click="teacherCardToBig">
+                <img :src="item.url" :data-url="item.url" style="height: 100%; width: 100%;" alt="">
+                <div class="card-name" :data-url="item.url">{{item.year}}年摄</div>
+              </div>
+            </div>
+            <div v-if="!isTeacherShow" class="wall mp4" style="overflow: hidden;">
+              <img style="height: 100%; transform: translateY(-0.35rem);" src="./assets/empty.png"/>
+            </div>
+          </div>
+          <div v-if="dialogVisible" class="big-pic">
+            <span class="big-back" @click="dialogVisible = false">X</span>
+            <img class="big-img" :src="teacherPicURL" alt="">
+          </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import '@/utils/flexible.js'
 import * as echarts from 'echarts'
@@ -380,8 +422,15 @@ import importJson from './utils/china.json'
 export default {
   data () {
     return {
+      teacherOptions: [],
+      teacherShow: null,
+      dialogVisible: false, // 控制教师大图模拟模态框
+      teacherPicURL: '',
+      isTeacherShow: false,
+      teacherValue: '',
       active: 0,
       toPageValue: false,
+      toSecondPageValue: false,
       // 全屏与否
       fullscreen: false,
 
@@ -439,6 +488,7 @@ export default {
       // 图片控制
       default: 0,
       bigPhotoUrl: 'http://10.21.63.25:18082/img/showGif.gif',
+      // bigPhotoUrl: 'https://zqc-blog-img.oss-cn-beijing.aliyuncs.com/https://zqc-blog-img.oss-cn-beijing.aliyuncs.comshowGif.gif',
       showStyleTop: { opacity: 1 },
       showStyleBottom: { opacity: 1 },
       photoShow: [],
@@ -472,7 +522,9 @@ export default {
       studentZyOptions: [],
       studentClassOptions: [],
       yjsYearOptions: [],
-      studentImgOptions: []
+      studentImgOptions: [],
+      // 第三版，控制是否显示右下角模块是新闻还是入口
+      vision3: false
     }
   },
   mounted () {
@@ -499,8 +551,25 @@ export default {
     window.removeEventListener('resize', this.resize)
   },
   methods: {
-    changeMap (event) {
-      console.log(event)
+    // 检索教师风采
+    async findTeacher () {
+      await this.$axios.get('/jlclient/teacher-image', { params: { teacher_name: this.teacherValue[2] } }).then((res) => {
+        if (res.data.status === 200 && res.data.msg === '获取成功') {
+          this.teacherShow = res.data.data
+          this.isTeacherShow = true
+          this.$message({ type: 'success', message: '检索成功' })
+        } else if (res.data.status === 410 && res.data.msg === '暂无照片') {
+          this.$message({ type: 'warning', message: '由于数据收集有限，暂无该教师图片信息' })
+        } else {
+          this.$message({ type: 'danger', message: '查询异常，请稍侯重试' })
+        }
+      })
+    },
+    // 教师风采大图
+    teacherCardToBig (e) {
+      this.dialogVisible = true
+      this.teacherPicURL = e.target.dataset.url
+      console.log(e.target)
     },
     // 初始化数据信息
     initItems () {
@@ -515,6 +584,7 @@ export default {
       this.getChartThirdData()
       this.getChartFourthData()
       this.getNewsData()
+      this.getTeacherHistory()
     },
     // 获取校区数据
     async getItemsCampus () {
@@ -537,6 +607,28 @@ export default {
       await this.$axios.get('/jlclient/getItems/getYear').then((res) => {
         if (res.data.status === 200 && res.data.msg === '请求成功') {
           this.studentYearOptions = res.data.data.year
+          console.log(res.data.data.year)
+        }
+      })
+    },
+    // 获取全部教师-级联器
+    async getTeacherHistory () {
+      await this.$axios.get('/jlclient/teacher').then((res) => {
+        if (res.data.status === 200 && res.data.msg === '所有部门教职工数据获取成功') {
+          const temp = []
+          const params = Object.assign({}, res.data.data)
+          params.children.forEach(item => {
+            item.children.forEach(item1 => {
+              item1.value = item1.label
+            })
+          })
+          temp.push(params)
+          this.teacherOptions = temp
+          // console.log(res.data.data)
+          // console.log(this.teacherOptions)
+          // console.log(typeof (this.teacherOptions))
+          // console.log(temp.unshift({ id: this.teacherOptions }))
+          // console.log(typeof (temp.push(this.teacherOptions)))
         }
       })
     },
@@ -776,6 +868,7 @@ export default {
           this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
         } else {
           this.$message({ type: 'alert', message: res.data.msg })
+          this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
         }
       })
     },
@@ -797,9 +890,11 @@ export default {
           this.initPhoto()
           this.selectPhoto(this.default)
           this.closeShow()
-        }
-        if (res.data.status === 500 && res.data.msg === '未查询到信息') {
+        } else if (res.data.status === 500 && res.data.msg === '未查询到信息') {
           this.$message({ type: 'alert', message: '暂无相应数据' })
+          this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
+        } else {
+          this.$message({ type: 'error', message: '数据异常，请稍后重试' })
           this.bigPhotoUrl = 'http://10.21.63.25:18082/img/showGif.gif'
         }
       })
@@ -1469,8 +1564,45 @@ export default {
 
       option && this.myChartsFifth.setOption(option)
     },
-    toNextPage () {
-      this.toPageValue = !this.toPageValue
+    // 页面切换-模拟开路由
+    toNextPage (num) {
+      if (num === 1) {
+        if (!this.toPageValue) {
+          document.getElementById('toplevel').classList.remove('secondShowBefore')
+          document.getElementById('toplevel').classList.remove('secondShowAfter')
+          document.getElementById('toplevel').classList.remove('fristShowBefore')
+          document.getElementById('toplevel').classList.add('fristShowAfter')
+          this.toPageValue = !this.toPageValue
+        } else {
+          document.getElementById('toplevel').classList.remove('secondShowBefore')
+          document.getElementById('toplevel').classList.remove('secondShowAfter')
+          document.getElementById('toplevel').classList.remove('fristShowAfter')
+          document.getElementById('toplevel').classList.add('fristShowBefore')
+          this.toPageValue = !this.toPageValue
+        }
+      } else if (num === 2) {
+        if (!this.toSecondPageValue) {
+          document.getElementById('toplevel').classList.remove('fristShowBefore')
+          document.getElementById('toplevel').classList.remove('fristShowAfter')
+          document.getElementById('toplevel').classList.remove('secondShowBefore')
+          document.getElementById('toplevel').classList.add('secondShowAfter')
+          this.toSecondPageValue = !this.toSecondPageValue
+        } else {
+          document.getElementById('toplevel').classList.remove('fristShowBefore')
+          document.getElementById('toplevel').classList.remove('fristShowAfter')
+          document.getElementById('toplevel').classList.remove('secondShowAfter')
+          document.getElementById('toplevel').classList.add('secondShowBefore')
+          this.toSecondPageValue = !this.toSecondPageValue
+        }
+      }
+    },
+    // 页1右下角模块区切资讯列表
+    newsTurn () {
+      this.vision3 = !this.vision3
+    },
+    // 临时-待开放提醒
+    info () {
+      this.$message({ type: 'warning', message: '该功能正在快马加鞭的赶来~' })
     }
   }
 }
@@ -2136,6 +2268,9 @@ export default {
             // background-color: rgb(85, 80, 80);
             .main {
               height: 84%;
+              display: flex;
+              flex-direction: row;
+              flex-wrap: wrap;
               .new {
                 height: 14%;
                 width: 90%;
@@ -2166,20 +2301,41 @@ export default {
                   text-overflow: ellipsis;
                 }
               }
+              .gn-card{
+                width: 50%;
+                height: 43%;
+                display: flex;
+                cursor: pointer;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                img{
+                  width: 0.5rem;
+                  height: 0.5rem;
+                }
+                .name{
+                  font-family: pmzd;
+                  color: #11dff2;
+                  font-size: 0.1rem;
+                }
+              }
             }
           }
         }
       }
     }
     }
-    .bgmap {
+    .bgmap, .bgteacher {
       position: relative;
+      background: url("./assets/bgi.jpg") no-repeat;
+      background-size: 100% 100%;
       .btn {
         width: 10%;
         height: 10%;
         position: absolute;
         left: 2%;
         top: 2%;
+        font-family: pmzd;
         font-size: 0.22rem;
         cursor: pointer;
         color: #007ACC;
@@ -2200,12 +2356,86 @@ export default {
         top: 35%;
       }
     }
+    .bgteacher{
+      width:100%;
+      height:100%;
+      position: relative;
+      background-color: #081D43;
+      .title{
+        position: absolute;
+        width: 70%;
+        height: 15%;
+        top: 0;
+        left: 15%;
+        margin: 0 auto;
+        font-family: pmzd;
+        font-size: 0.35rem;
+        font-weight: 500;
+        color: #11dff2;
+        text-align: center;
+        line-height: 1.7;
+      }
+      .wall{
+        height:76%;
+        width:90%;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        position: absolute;
+        top: 20%;
+        left: 5%;
+        .wall-card{
+          height: 1.5rem;
+          width: 2.8rem;
+          position: relative;
+          .card-name{
+            height: 16%;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            font-size: 0.15rem;
+            line-height: 0.2rem;
+            color: #fff;
+            background: linear-gradient(to top,rgba(0,0,0,1),rgba(0,0,0,.2));
+          }
+        }
+      }
+      .big-pic{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        .big-img{
+          width: 80%;
+          height: 80%;
+          margin: 6% auto;
+          object-fit: contain;
+        }
+        .big-back{
+          position: absolute;
+          top: 0.2rem;
+          right: 0.4rem;
+          font-size: 0.4rem;
+          font-weight: bold;
+          color: #11dff2;
+          cursor: pointer;
+        }
+      }
+    }
   }
   .fristShowAfter{
     transform: translate(0, -100%);
     transition: all 0.7s ease;
   }
   .fristShowBefore{
+    transform: translate(0, 0%);
+    transition: all 0.7s ease;
+  }
+  .secondShowAfter{
+    transform: translate(0, -200%);
+    transition: all 0.7s ease;
+  }
+  .secondShowBefore{
     transform: translate(0, 0%);
     transition: all 0.7s ease;
   }
